@@ -15,7 +15,11 @@ app
     .use(router.routes());
     //.use(router.allowedMethods());
 
-
-
-app.listen(app.context.configure.server.port);
-app.context.log(`tzbei api listen in ${app.context.configure.server.port}`);
+if( !module.parent ){
+	module.exports = app.callback();
+}
+else {
+	const configure = app.context.configure;
+	app.listen(configure.server.port);
+	app.context.log(`${configure.app.name} listen in ${configure.server.port}`);
+}

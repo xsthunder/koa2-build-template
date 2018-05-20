@@ -2,7 +2,7 @@
  * Created by xsthunder on 2018/05/08
  * app configure.
  */
-
+const fs = require('fs');
 'use strict';
 
 let enableMongoDb = false;
@@ -10,21 +10,26 @@ let enableMongoDb = false;
 let enableDbLog = enableMongoDb||false;
 
 let env = 'development';
-let version = 1;
-let host = '127.0.0.1';
-let port = 20185;
-
 
 const configure = {};
 
-configure.app = {
-    env: env,
-    version: version
-};
+try{
+	let {name,version} = JSON.parse( fs.readFileSync('package.json', 'utf-8') );
+	configure.app = {
+		name:name,
+		env: env,
+		version: version
+	};
+}catch(err){
+	console.error('Failed to get app name and version', err);
+}
+
+let port = 20185;
+
 configure.server = {
-    host: host,
-    port: port
+	port: port
 };
+
 configure.enableMongoDb = enableMongoDb;
 if( enableMongoDb ){
 	configure.mongoose = {
